@@ -44,7 +44,7 @@ export function HomePageContent(): React.JSX.Element {
             <motion.div variants={fadeUp} className="flex flex-wrap gap-4">
               <Button
                 type="button"
-                onClick={openBooking}
+                onClick={() => openBooking()}
                 className="h-12 rounded-full bg-teal-600 px-6 text-white hover:bg-teal-500 dark:bg-teal-400 dark:text-slate-900 dark:hover:bg-teal-300"
               >
                 Book an Appointment

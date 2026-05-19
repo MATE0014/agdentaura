@@ -71,7 +71,7 @@ export function Navbar(): React.JSX.Element {
           <ThemeToggle />
           <Button
             type="button"
-            onClick={openBooking}
+            onClick={() => openBooking()}
             className="h-11 rounded-full bg-teal-600 px-5 text-white hover:bg-teal-500 dark:bg-teal-400 dark:text-slate-900 dark:hover:bg-teal-300"
           >
             Book Appointment
@@ -116,7 +116,7 @@ export function Navbar(): React.JSX.Element {
               <div className="mt-auto border-t border-border p-4">
                 <Button
                   type="button"
-                  onClick={openBooking}
+                  onClick={() => openBooking()}
                   className="h-11 w-full rounded-full bg-teal-600 text-white hover:bg-teal-500 dark:bg-teal-400 dark:text-slate-900 dark:hover:bg-teal-300"
                 >
                   Book Appointment
