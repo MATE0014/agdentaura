@@ -25,7 +25,7 @@ export function ThemeToggle(): React.JSX.Element {
       size="icon"
       aria-label="Toggle theme"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="relative overflow-hidden rounded-full border border-border bg-background/80 text-foreground shadow-sm backdrop-blur-sm hover:bg-accent"
+      className="relative size-11 overflow-hidden rounded-full border border-border bg-card text-foreground hover:bg-accent"
     >
       <AnimatePresence mode="wait" initial={false}>
         {mounted ? (
@@ -37,11 +37,11 @@ export function ThemeToggle(): React.JSX.Element {
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="flex items-center justify-center"
           >
-            <FontAwesomeIcon icon={isDark ? faMoon : faSun} className="size-4 text-teal-600 dark:text-teal-400" />
+            <FontAwesomeIcon icon={isDark ? faMoon : faSun} className="size-5 text-brand" />
           </motion.span>
         ) : (
           <span className="flex items-center justify-center">
-            <FontAwesomeIcon icon={faSun} className="size-4 text-teal-600 dark:text-teal-400" />
+            <FontAwesomeIcon icon={faSun} className="size-5 text-brand" />
           </span>
         )}
       </AnimatePresence>

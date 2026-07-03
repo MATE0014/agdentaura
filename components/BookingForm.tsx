@@ -35,23 +35,51 @@ import { bookingServiceOptions } from "@/lib/site"
 import { submitAppointment } from "@/lib/api"
 import type { BookingFormValues } from "@/types"
 
-const CLINIC_OPEN_HOUR = 9
-const CLINIC_CLOSE_HOUR = 18
 const SERVICE_NOT_SELECTED = "__service_not_selected__"
 
-const appointmentTimeSlots = Array.from(
-  { length: CLINIC_CLOSE_HOUR - CLINIC_OPEN_HOUR + 1 },
-  (_, index) => {
-    const hour = CLINIC_OPEN_HOUR + index
-    const slotStart = new Date(2020, 0, 1, hour, 0, 0, 0)
-    const slotEnd = new Date(2020, 0, 1, hour + 1, 0, 0, 0)
+// Actual clinic working hours (matches siteConfig.hours): morning and evening windows.
+const CLINIC_HOURS = [
+  { open: "09:30", close: "14:00" },
+  { open: "17:00", close: "20:00" },
+] as const
+const SLOT_DURATION_MINUTES = 60
 
-    return {
-      value: `${hour.toString().padStart(2, "0")}:00`,
-      label: `${format(slotStart, "h:mm a")} - ${format(slotEnd, "h:mm a")}`,
-    }
+function timeStringToMinutes(time: string): number {
+  const [hourPart, minutePart] = time.split(":")
+  return Number(hourPart) * 60 + Number(minutePart)
+}
+
+function minutesToTimeString(totalMinutes: number): string {
+  const hour = Math.floor(totalMinutes / 60)
+  const minute = totalMinutes % 60
+  return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
+}
+
+function minutesToLabel(totalMinutes: number): string {
+  return format(new Date(2020, 0, 1, Math.floor(totalMinutes / 60), totalMinutes % 60, 0, 0), "h:mm a")
+}
+
+// Generate one-hour slots that fit entirely inside each clinic working window.
+const appointmentTimeSlots = CLINIC_HOURS.flatMap(({ open, close }) => {
+  const openMinutes = timeStringToMinutes(open)
+  const closeMinutes = timeStringToMinutes(close)
+  const slots: { value: string; label: string }[] = []
+
+  for (
+    let start = openMinutes;
+    start + SLOT_DURATION_MINUTES <= closeMinutes;
+    start += SLOT_DURATION_MINUTES
+  ) {
+    slots.push({
+      value: minutesToTimeString(start),
+      label: `${minutesToLabel(start)} - ${minutesToLabel(start + SLOT_DURATION_MINUTES)}`,
+    })
   }
-)
+
+  return slots
+})
+
+const validTimeSlotValues = new Set(appointmentTimeSlots.map((slot) => slot.value))
 
 function parseTimeSlot(timeSlot: string): Date {
   const [hourPart, minutePart] = timeSlot.split(":")
@@ -89,14 +117,10 @@ const bookingSchema = z.object({
     return
   }
 
-  const selectedSlotTime = parseTimeSlot(values.preferredTimeSlot)
-  const selectedHour = selectedSlotTime.getHours()
-  const selectedMinute = selectedSlotTime.getMinutes()
-
-  if (selectedMinute !== 0 || selectedHour < CLINIC_OPEN_HOUR || selectedHour > CLINIC_CLOSE_HOUR) {
+  if (!validTimeSlotValues.has(values.preferredTimeSlot)) {
     context.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Please choose a valid 1-hour appointment slot.",
+      message: "Please choose a valid 1-hour slot within clinic hours.",
       path: ["preferredTimeSlot"],
     })
 
@@ -228,15 +252,15 @@ export function BookingForm({
     : []
 
   return (
-    <div className={cn("rounded-3xl border border-border bg-slate-50 p-6 shadow-sm dark:bg-slate-800/80", className)}>
-      <div className="mb-6 space-y-2">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600 dark:text-teal-400">
+    <div className={cn("rounded-[28px] border border-border bg-card p-6 shadow-[var(--shadow-feature)] sm:rounded-[45px] sm:p-10", className)}>
+      <div className="mb-8 space-y-2">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand">
           Appointment
         </p>
-        <h2 className="font-heading text-2xl font-semibold text-slate-800 dark:text-slate-100">
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground">
           Book your visit
         </h2>
-        <p className="max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
+        <p className="max-w-2xl text-sm leading-6 tracking-tight text-muted-foreground">
           Share a few details and the doctor will follow up with the right treatment slot.
         </p>
       </div>
@@ -301,7 +325,7 @@ export function BookingForm({
                       )}
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent position="popper" className="max-h-72">
                     {bookingServiceOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
@@ -327,11 +351,11 @@ export function BookingForm({
                         type="button"
                         variant="outline"
                         className={cn(
-                          "h-11 w-full justify-start border-border bg-white text-left font-normal dark:bg-slate-900",
+                          "h-11 w-full justify-start rounded-full border-border bg-background text-left font-normal",
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        <CalendarIcon className="mr-2 size-4 text-teal-600 dark:text-teal-400" />
+                        <CalendarIcon className="mr-2 size-4 text-brand" />
                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                       </Button>
                     </FormControl>
@@ -362,7 +386,7 @@ export function BookingForm({
                       <SelectValue placeholder={selectedDate ? "Choose a 1-hour slot" : "Pick a date first"} />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent position="popper" className="max-h-72">
                     {availableTimeSlots.length > 0 ? (
                       availableTimeSlots.map((timeSlot) => (
                         <SelectItem key={timeSlot.value} value={timeSlot.value}>
@@ -377,8 +401,8 @@ export function BookingForm({
                   </SelectContent>
                 </Select>
                 <FormMessage />
-                <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
-                  One-hour visits are available during clinic hours, and today starts at least two hours from now.
+                <p className="text-xs leading-5 tracking-tight text-muted-foreground">
+                  One-hour visits during clinic hours (morning &amp; evening). For today, the earliest slot is at least two hours from now.
                 </p>
               </FormItem>
             )}
@@ -403,10 +427,10 @@ export function BookingForm({
           />
 
           <div className="md:col-span-2 flex items-center gap-4">
-            <Button type="submit" className="h-11 rounded-full bg-teal-600 px-6 text-white hover:bg-teal-500 dark:bg-teal-400 dark:text-slate-900 dark:hover:bg-teal-300">
+            <Button type="submit" className="h-11 rounded-full border border-foreground bg-background px-6 text-sm font-medium text-foreground transition-colors hover:bg-foreground hover:text-background">
               {submitLabel}
             </Button>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
+            <p className="text-sm tracking-tight text-muted-foreground">
               Preferred date/time: {selectedDate ? format(selectedDate, "PPPP") : "not selected"}
               {selectedDate && selectedTimeSlot ? ` at ${format(parseTimeSlot(selectedTimeSlot), "h:mm a")}` : ""}
             </p>
@@ -415,20 +439,20 @@ export function BookingForm({
       </Form>
 
       <Dialog open={showConfirmation} onOpenChange={(open) => (open ? setShowConfirmation(true) : handleCancelReview())}>
-        <DialogContent className="!max-w-[calc(100%-1.5rem)] bg-white p-6 sm:!max-w-2xl dark:bg-slate-900" showCloseButton={false}>
+        <DialogContent className="!max-w-[calc(100%-1.5rem)] rounded-[30px] bg-card p-8 sm:!max-w-2xl" showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle className="font-heading text-2xl leading-tight text-slate-800 dark:text-slate-100">
+            <DialogTitle className="text-2xl font-semibold leading-tight tracking-tight text-foreground">
               Confirm appointment details
             </DialogTitle>
-            <DialogDescription className="text-sm leading-6 text-slate-600 dark:text-slate-300">
+            <DialogDescription className="text-sm leading-6 tracking-tight text-muted-foreground">
               Please review the details below before we send your appointment request.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
+          <div className="grid gap-3 rounded-[24px] border border-border bg-background p-5 text-sm tracking-tight text-foreground/90">
             {confirmationDetails.map((detail) => (
               <div key={detail.label} className="grid gap-1 sm:grid-cols-[140px_minmax(0,1fr)] sm:gap-4">
-                <span className="font-semibold text-slate-500 dark:text-slate-400">{detail.label}</span>
+                <span className="font-semibold text-muted-foreground">{detail.label}</span>
                 <span className="break-words">{detail.value}</span>
               </div>
             ))}
@@ -440,7 +464,7 @@ export function BookingForm({
             </Button>
             <Button
               type="button"
-              className="h-11 rounded-full bg-teal-600 px-6 text-white hover:bg-teal-500 dark:bg-teal-400 dark:text-slate-900 dark:hover:bg-teal-300"
+              className="h-11 rounded-full border border-foreground bg-background px-6 text-sm font-medium text-foreground transition-colors hover:bg-foreground hover:text-background"
               onClick={handleConfirmBooking}
             >
               Confirm and book

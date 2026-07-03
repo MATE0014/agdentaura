@@ -1,9 +1,11 @@
 "use client"
 
+import { useEffect, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBars, faChevronRight, faTooth } from "@fortawesome/free-solid-svg-icons"
+import { faBars, faChevronRight } from "@fortawesome/free-solid-svg-icons"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,36 +19,52 @@ import {
 } from "@/components/ui/sheet"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { useBooking } from "@/components/BookingProvider"
-import { useScrollPosition } from "@/hooks/useScrollPosition"
 import { cn } from "@/lib/utils"
 import { navLinks } from "@/lib/site"
 
 export function Navbar(): React.JSX.Element {
   const pathname = usePathname()
-  const scrolled = useScrollPosition(16)
   const { openBooking } = useBooking()
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-40 border-b border-transparent transition-all duration-300",
-        scrolled && "border-border bg-white/90 shadow-sm backdrop-blur-md dark:bg-slate-900/90"
-      )}
-    >
-      <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:min-h-20 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="flex size-11 items-center justify-center rounded-2xl bg-teal-600 text-white shadow-md shadow-teal-600/20 dark:bg-teal-400 dark:text-slate-900">
-            <FontAwesomeIcon icon={faTooth} className="size-5" />
+    <header className="sticky top-0 z-40 px-4 pt-4 sm:px-6 lg:px-8">
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none fixed inset-x-0 top-0 -z-10 h-24 bg-gradient-to-b from-background/60 via-background/20 to-transparent backdrop-blur-md transition-opacity duration-300 [mask-image:linear-gradient(to_bottom,black,black_40%,transparent)]",
+          scrolled ? "opacity-100" : "opacity-0"
+        )}
+      />
+      <nav
+        aria-label="Primary"
+        className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 rounded-[52px] border border-border/70 bg-card/85 px-5 py-3 shadow-[var(--shadow-pill)] backdrop-blur-md sm:px-6"
+      >
+        <Link href="/" className="flex items-center gap-3" aria-label="AG Dentaura Dental Clinic home">
+          <span className="flex size-11 items-center justify-center overflow-hidden rounded-[18px] bg-card shadow-[var(--shadow-pill)]">
+            <Image
+              src="/Logo.png"
+              alt="AG Dentaura Dental Clinic logo"
+              width={44}
+              height={44}
+              priority
+              className="size-full object-contain"
+            />
           </span>
-          <span className="flex flex-col">
-            <span className="font-heading text-lg font-semibold tracking-tight text-slate-800 dark:text-slate-100">
-              AG Dentaura
-            </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">Smile care with precision</span>
+          <span className="flex flex-col leading-tight">
+            <span className="text-lg font-semibold tracking-tight text-foreground">AG Dentaura</span>
+            <span className="hidden text-xs tracking-tight text-muted-foreground sm:block">Care You Can Trust, Smile You Deserve</span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <div className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => {
             const isActive = pathname === link.href
 
@@ -54,31 +72,30 @@ export function Navbar(): React.JSX.Element {
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-teal-600 dark:hover:text-teal-400",
-                  isActive ? "text-teal-600 dark:text-teal-400" : "text-slate-700 dark:text-slate-200"
+                  "text-sm tracking-tight transition-colors hover:text-brand",
+                  isActive ? "text-brand" : "text-foreground/80"
                 )}
               >
                 {link.label}
               </Link>
             )
           })}
-        </nav>
-
-        {/* service tabs removed from navbar per request */}
+        </div>
 
         <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
           <Button
             type="button"
             onClick={() => openBooking()}
-            className="h-11 rounded-full bg-teal-600 px-5 text-white hover:bg-teal-500 dark:bg-teal-400 dark:text-slate-900 dark:hover:bg-teal-300"
+            className="h-11 rounded-full border border-foreground bg-background px-6 text-sm font-medium text-foreground transition-colors hover:bg-foreground hover:text-background"
           >
             Book Appointment
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-3 lg:hidden">
           <ThemeToggle />
           <Sheet>
             <SheetTrigger asChild>
@@ -87,12 +104,12 @@ export function Navbar(): React.JSX.Element {
                 variant="ghost"
                 size="icon"
                 aria-label="Open navigation menu"
-                className="rounded-full border border-border bg-background/80 backdrop-blur-sm"
+                className="size-11 rounded-full border border-border bg-card"
               >
                 <FontAwesomeIcon icon={faBars} className="size-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent className="bg-white dark:bg-slate-900">
+            <SheetContent className="bg-background">
               <SheetHeader>
                 <SheetTitle>AG Dentaura</SheetTitle>
                 <SheetDescription>Navigate the clinic website or request an appointment.</SheetDescription>
@@ -102,9 +119,10 @@ export function Navbar(): React.JSX.Element {
                   <SheetClose asChild key={link.href}>
                     <Link
                       href={link.href}
+                      aria-current={pathname === link.href ? "page" : undefined}
                       className={cn(
-                        "flex items-center justify-between rounded-2xl border border-border px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:border-teal-500 hover:text-teal-600 dark:text-slate-200 dark:hover:text-teal-400",
-                        pathname === link.href && "border-teal-500 text-teal-600 dark:text-teal-400"
+                        "flex items-center justify-between rounded-2xl border border-border px-4 py-3 text-sm tracking-tight text-foreground/80 transition-colors hover:border-brand hover:text-brand",
+                        pathname === link.href && "border-brand text-brand"
                       )}
                     >
                       <span>{link.label}</span>
@@ -117,7 +135,7 @@ export function Navbar(): React.JSX.Element {
                 <Button
                   type="button"
                   onClick={() => openBooking()}
-                  className="h-11 w-full rounded-full bg-teal-600 text-white hover:bg-teal-500 dark:bg-teal-400 dark:text-slate-900 dark:hover:bg-teal-300"
+                  className="h-11 w-full rounded-full border border-foreground bg-background text-foreground transition-colors hover:bg-foreground hover:text-background"
                 >
                   Book Appointment
                 </Button>
@@ -125,7 +143,7 @@ export function Navbar(): React.JSX.Element {
             </SheetContent>
           </Sheet>
         </div>
-      </div>
+      </nav>
     </header>
   )
 }

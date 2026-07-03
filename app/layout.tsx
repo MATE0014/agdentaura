@@ -1,35 +1,97 @@
-import type { Metadata } from "next";
-import { Bodoni_Moda, Geist_Mono, Source_Serif_4 } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Manrope } from "next/font/google";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "./globals.css";
 import { SiteShell } from "@/components/SiteShell";
+import { StructuredData } from "@/components/StructuredData";
+import { siteConfig } from "@/lib/site";
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
 config.autoAddCss = false;
 
-const sourceSerif = Source_Serif_4({
-  variable: "--font-body-serif",
+// Sofia substitute — a geometric sans carrying the whole system at every weight.
+const sofia = Manrope({
+  variable: "--font-sofia",
   subsets: ["latin"],
-});
-
-const bodoniModa = Bodoni_Moda({
-  variable: "--font-editorial",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: "AG Dentaura",
-    template: "%s | AG Dentaura",
+    default: `${siteConfig.name} — Modern Dental Clinic | ${siteConfig.tagline}`,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: "AG Dentaura is a modern dental clinic website with premium care, online booking, and patient-first service.",
+  description: siteConfig.description,
+  keywords: [...siteConfig.keywords],
+  applicationName: siteConfig.name,
+  authors: [{ name: siteConfig.name }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  alternates: {
+    canonical: "/",
+  },
+  category: "health",
+  other: {
+    "geo.region": "IN-RJ",
+    "geo.placename": "Jaipur",
+    "geo.position": "26.8894208;75.759616",
+    ICBM: "26.8894208,75.759616",
+  },
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: true,
+  },
+  openGraph: {
+    type: "website",
+    locale: siteConfig.locale,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} — Modern Dental Clinic`,
+    description: siteConfig.description,
+    images: [
+      {
+        url: "/Logo.png",
+        width: 512,
+        height: 512,
+        alt: `${siteConfig.name} — ${siteConfig.tagline}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} — Modern Dental Clinic`,
+    description: siteConfig.description,
+    images: ["/Logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  icons: {
+    icon: [{ url: "/Logo.png", type: "image/png" }],
+    shortcut: "/Logo.png",
+    apple: "/Logo.png",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0b0b" },
+  ],
 };
 
 export default function RootLayout({
@@ -40,13 +102,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sourceSerif.variable} ${bodoniModa.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${sofia.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </head>
       <body className="min-h-full bg-background text-foreground">
+        <StructuredData />
         <SiteShell>{children}</SiteShell>
       </body>
     </html>

@@ -36,6 +36,63 @@ import type {
   Testimonial,
 } from "@/types"
 
+export const siteConfig = {
+  name: "AG Dentaura Dental Clinic",
+  shortName: "AG Dentaura",
+  tagline: "Care You Can Trust, Smile You Deserve",
+  description:
+    "AG Dentaura Dental Clinic in Mansarovar, Jaipur, led by Dr. Akash Garhwal (B.D.S. Cosmetic Dentist, Dental & Oral Surgeon), offers preventive, cosmetic, restorative, pediatric, and emergency dentistry with painless procedures, digital diagnostics, and easy online appointment booking.",
+  url: "https://www.agdentaura.in",
+  locale: "en_IN",
+  telephone: "+91-9352696621",
+  email: "info@agdentaura.in",
+  address: {
+    street: "Shop No. C-76, C-Block, Narayan Vihar, Near Narayan Vihar Police Station, Mansarovar",
+    city: "Jaipur",
+    region: "Rajasthan",
+    postalCode: "302020",
+    country: "IN",
+  },
+  hours: ["Mo-Sa 09:30-14:00", "Mo-Sa 17:00-20:00"],
+  geo: { latitude: 26.8894208, longitude: 75.759616 },
+  doctor: {
+    name: "Dr. Akash Garhwal",
+    qualification: "B.D.S. Cosmetic Dentist, Dental & Oral Surgeon",
+    registrationNumber: "A-9526",
+  },
+  sameAs: [
+    "https://www.instagram.com/",
+    "https://www.facebook.com/",
+    "https://wa.me/919352696621",
+  ],
+  keywords: [
+    "dentist in Jaipur",
+    "dental clinic in Jaipur",
+    "dentist in Mansarovar Jaipur",
+    "best dentist in Mansarovar",
+    "dental clinic in Mansarovar",
+    "tooth doctor in Jaipur",
+    "root canal treatment in Jaipur",
+    "dental implants in Jaipur",
+    "teeth whitening in Jaipur",
+    "pediatric dentist in Jaipur",
+    "emergency dentist Jaipur",
+    "cosmetic dentist Jaipur",
+    "Narayan Vihar dentist",
+    "dental clinic",
+    "dentist",
+    "teeth whitening",
+    "dental implants",
+    "braces and clear aligners",
+    "root canal treatment",
+    "cosmetic dentistry",
+    "pediatric dentistry",
+    "emergency dental care",
+    "online dental appointment",
+    "AG Dentaura",
+  ],
+} as const
+
 export const navLinks: NavLink[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
@@ -48,7 +105,7 @@ export const footerLinks: NavLink[] = navLinks
 export const socialLinks: SocialLink[] = [
   { href: "#", label: "Instagram", icon: faInstagram },
   { href: "#", label: "Facebook", icon: faFacebook },
-  { href: "#", label: "WhatsApp", icon: faWhatsapp },
+  { href: "https://wa.me/919352696621", label: "WhatsApp", icon: faWhatsapp },
 ]
 
 export const serviceCategories: BookingServiceOption[] = [
@@ -202,10 +259,15 @@ export const clinicValues: ClinicValue[] = [
 ]
 
 export const contactDetails: ContactDetail[] = [
-  { icon: faLocationDot, label: "Address", value: "123 Dental Street, Your City - 000000" },
-  { icon: faPhone, label: "Phone", value: "+91-XXXXXXXXXX" },
-  { icon: faEnvelope, label: "Email", value: "info@agdentaura.com" },
-  { icon: faClock, label: "Hours", value: "Mon–Sat: 9:00 AM – 7:00 PM" },
+  {
+    icon: faLocationDot,
+    label: "Address",
+    value:
+      "Shop No. C-76, C-Block, Narayan Vihar, Near Narayan Vihar Police Station, Mansarovar, Jaipur-302020",
+  },
+  { icon: faPhone, label: "Phone", value: "+91-9352696621" },
+  { icon: faEnvelope, label: "Email", value: "info@agdentaura.in" },
+  { icon: faClock, label: "Hours", value: "Morning: 9:30 AM – 2:00 PM · Evening: 5:00 PM – 8:00 PM" },
 ]
 
 export const serviceCards: ServiceCard[] = [

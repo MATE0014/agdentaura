@@ -57,15 +57,15 @@ export function ContactForm({ className }: ContactFormProps): React.JSX.Element 
   }
 
   return (
-    <div className={cn("rounded-3xl border border-border bg-slate-50 p-6 shadow-sm dark:bg-slate-800/80", className)}>
-      <div className="mb-6 space-y-2">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-600 dark:text-teal-400">
+    <div className={cn("rounded-[28px] border border-border bg-card p-6 shadow-[var(--shadow-feature)] sm:rounded-[45px] sm:p-10", className)}>
+      <div className="mb-8 space-y-2">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand">
           Contact Form
         </p>
-        <h2 className="font-heading text-2xl font-semibold text-slate-800 dark:text-slate-100">
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground">
           Send us a message
         </h2>
-        <p className="max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
+        <p className="max-w-2xl text-sm leading-6 tracking-tight text-muted-foreground">
           Use this form for general inquiries, treatment questions, or to request a callback.
         </p>
       </div>
@@ -143,7 +143,7 @@ export function ContactForm({ className }: ContactFormProps): React.JSX.Element 
           />
 
           <div className="md:col-span-2 flex justify-start">
-            <Button type="submit" className="h-11 rounded-full bg-teal-600 px-6 text-white hover:bg-teal-500 dark:bg-teal-400 dark:text-slate-900 dark:hover:bg-teal-300">
+            <Button type="submit" className="h-11 rounded-full border border-foreground bg-background px-6 text-sm font-medium text-foreground transition-colors hover:bg-foreground hover:text-background">
               Send Message
             </Button>
           </div>

@@ -9,10 +9,10 @@ export function BookingModal(): React.JSX.Element {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="!max-w-[calc(100%-1.5rem)] !sm:max-w-5xl max-h-[90vh] overflow-y-auto bg-white p-6 sm:p-8 dark:bg-slate-900">
+      <DialogContent className="!max-w-[calc(100%-1.5rem)] sm:!max-w-3xl max-h-[90vh] overflow-y-auto rounded-[24px] bg-card p-4 sm:rounded-[30px] sm:p-8">
         <DialogHeader>
-          <DialogTitle className="font-heading text-3xl leading-tight text-slate-800 sm:text-4xl dark:text-slate-100">Book an appointment</DialogTitle>
-          <DialogDescription className="text-base leading-7 text-slate-600 dark:text-slate-300">
+          <DialogTitle className="text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl">Book an appointment</DialogTitle>
+          <DialogDescription className="text-base leading-7 tracking-tight text-muted-foreground">
             Fill in your details, review them, and confirm a 1-hour slot that fits your schedule.
           </DialogDescription>
         </DialogHeader>
