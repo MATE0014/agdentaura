@@ -11,12 +11,18 @@ import { useBooking } from "@/components/BookingProvider"
 
 const eyebrow = "text-sm font-semibold uppercase tracking-[0.2em] text-brand"
 const iconTile =
-  "flex size-14 items-center justify-center rounded-[22px] bg-card text-brand shadow-[var(--shadow-pill)] ring-1 ring-border/50"
+  "flex size-14 items-center justify-center rounded-[22px] bg-white/15 text-white shadow-[var(--shadow-pill)] ring-1 ring-white/25 backdrop-blur-sm"
+const pillOnDark =
+  "h-11 rounded-full border border-white/70 bg-white/10 px-6 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-neutral-900"
 const pillOutline =
   "h-11 rounded-full border border-foreground bg-background px-6 text-sm font-medium text-foreground transition-colors hover:bg-foreground hover:text-background"
 
 function getBookingServiceValue(serviceTitle: string): string {
   return bookingServiceOptions.find((option) => option.label === serviceTitle)?.value ?? ""
+}
+
+function getServiceImage(serviceTitle: string): string {
+  return encodeURI(`/${serviceTitle}.png`)
 }
 
 export function ServicesPageContent(): React.JSX.Element {
@@ -55,23 +61,34 @@ export function ServicesPageContent(): React.JSX.Element {
         >
           {serviceCards.map((service) => (
             <motion.div key={service.title} variants={fadeUp} whileHover={{ y: -4 }} className="h-full">
-              <Card className="h-full border-0 ring-1 ring-border/60">
-                <CardHeader className="space-y-4">
-                  <span className={iconTile}>
-                    <FontAwesomeIcon icon={service.icon} className="size-6" />
-                  </span>
-                  <CardTitle className="text-2xl tracking-tight text-foreground">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6 text-sm leading-6 tracking-tight text-muted-foreground">
-                  <p>{service.description}</p>
-                  <Button
-                    type="button"
-                    onClick={() => openBooking(getBookingServiceValue(service.title))}
-                    className={pillOutline}
-                  >
-                    Book Now
-                  </Button>
-                </CardContent>
+              <Card className="relative h-full overflow-hidden border-0 ring-1 ring-border/60">
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover/card:scale-105"
+                  style={{
+                    backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.7) 45%, rgba(0,0,0,0.55)), url("${getServiceImage(service.title)}")`,
+                  }}
+                />
+                <div className="relative flex h-full flex-col">
+                  <CardHeader className="space-y-4">
+                    <span className={iconTile}>
+                      <FontAwesomeIcon icon={service.icon} className="size-6" />
+                    </span>
+                    <CardTitle className="text-2xl tracking-tight text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.5)]">
+                      {service.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="mt-auto space-y-6 text-sm leading-6 tracking-tight text-white/85">
+                    <p>{service.description}</p>
+                    <Button
+                      type="button"
+                      onClick={() => openBooking(getBookingServiceValue(service.title))}
+                      className={pillOnDark}
+                    >
+                      Book Now
+                    </Button>
+                  </CardContent>
+                </div>
               </Card>
             </motion.div>
           ))}

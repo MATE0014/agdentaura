@@ -25,6 +25,12 @@ const pillGhost =
   "h-12 rounded-full border border-border bg-background px-6 text-sm font-medium text-foreground transition-colors hover:bg-muted"
 const iconTile =
   "flex size-14 items-center justify-center rounded-[22px] bg-card text-brand shadow-[var(--shadow-pill)] ring-1 ring-border/50"
+const iconTileDark =
+  "flex size-14 items-center justify-center rounded-[22px] bg-white/15 text-white shadow-[var(--shadow-pill)] ring-1 ring-white/25 backdrop-blur-sm"
+
+function getServiceImage(serviceTitle: string): string {
+  return encodeURI(`/${serviceTitle}.png`)
+}
 
 export function HomePageContent(): React.JSX.Element {
   const { openBooking } = useBooking()
@@ -145,17 +151,28 @@ export function HomePageContent(): React.JSX.Element {
           {serviceCards.slice(0, 6).map((item) => (
             <Card
               key={item.title}
-              className="border-0 ring-1 ring-border/60 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-feature)]"
+              className="relative overflow-hidden border-0 ring-1 ring-border/60 transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-feature)]"
             >
-              <CardHeader className="space-y-4">
-                <span className={iconTile}>
-                  <FontAwesomeIcon icon={item.icon} className="size-5" />
-                </span>
-                <CardTitle className="text-xl tracking-tight text-foreground">{item.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm leading-6 tracking-tight text-muted-foreground">
-                {item.description}
-              </CardContent>
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover/card:scale-105"
+                style={{
+                  backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.7) 45%, rgba(0,0,0,0.55)), url("${getServiceImage(item.title)}")`,
+                }}
+              />
+              <div className="relative flex h-full flex-col">
+                <CardHeader className="space-y-4">
+                  <span className={iconTileDark}>
+                    <FontAwesomeIcon icon={item.icon} className="size-5" />
+                  </span>
+                  <CardTitle className="text-xl tracking-tight text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.5)]">
+                    {item.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="mt-auto text-sm leading-6 tracking-tight text-white/85">
+                  {item.description}
+                </CardContent>
+              </div>
             </Card>
           ))}
 

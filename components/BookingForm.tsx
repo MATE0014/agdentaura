@@ -3,7 +3,7 @@
 import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format, isBefore, isSameDay, startOfToday } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, Clock, Mail, MessageSquare, Phone, Stethoscope, User } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
@@ -274,7 +274,10 @@ export function BookingForm({
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your full name" {...field} />
+                  <div className="relative">
+                    <User className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-brand" />
+                    <Input placeholder="Your full name" className="h-11 rounded-full pl-11" {...field} />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -288,7 +291,10 @@ export function BookingForm({
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input placeholder="Phone number" {...field} />
+                  <div className="relative">
+                    <Phone className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-brand" />
+                    <Input placeholder="Phone number" className="h-11 rounded-full pl-11" {...field} />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -302,7 +308,10 @@ export function BookingForm({
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="you@example.com" {...field} />
+                  <div className="relative">
+                    <Mail className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-brand" />
+                    <Input type="email" placeholder="you@example.com" className="h-11 rounded-full pl-11" {...field} />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -317,9 +326,10 @@ export function BookingForm({
                 <FormLabel>Select Service</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="h-11 w-full rounded-full pl-4 [&>span[data-slot=select-value]]:flex-1 [&>span[data-slot=select-value]]:text-left">
+                      <Stethoscope className="size-4 shrink-0 text-brand" />
                       {field.value === SERVICE_NOT_SELECTED ? (
-                        <span className="text-muted-foreground">Select a service</span>
+                        <span className="flex-1 text-left text-muted-foreground">Select a service</span>
                       ) : (
                         <SelectValue />
                       )}
@@ -351,11 +361,11 @@ export function BookingForm({
                         type="button"
                         variant="outline"
                         className={cn(
-                          "h-11 w-full justify-start rounded-full border-border bg-background text-left font-normal",
+                          "h-11 w-full justify-start rounded-full border-border bg-background pl-4 text-left font-normal",
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        <CalendarIcon className="mr-2 size-4 text-brand" />
+                        <CalendarIcon className="mr-2 size-4 shrink-0 text-brand" />
                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                       </Button>
                     </FormControl>
@@ -382,7 +392,8 @@ export function BookingForm({
                 <FormLabel>Preferred Time Slot</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value} disabled={!selectedDate}>
                   <FormControl>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="h-11 w-full rounded-full pl-4 [&>span[data-slot=select-value]]:flex-1 [&>span[data-slot=select-value]]:text-left">
+                      <Clock className="size-4 shrink-0 text-brand" />
                       <SelectValue placeholder={selectedDate ? "Choose a 1-hour slot" : "Pick a date first"} />
                     </SelectTrigger>
                   </FormControl>
@@ -415,11 +426,14 @@ export function BookingForm({
               <FormItem className="md:col-span-2">
                 <FormLabel>Message</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder="Tell us about your concern or preferred appointment time."
-                    className="min-h-32"
-                    {...field}
-                  />
+                  <div className="relative">
+                    <MessageSquare className="pointer-events-none absolute left-4 top-3.5 size-4 text-brand" />
+                    <Textarea
+                      placeholder="Tell us about your concern or preferred appointment time."
+                      className="min-h-32 rounded-3xl pl-11 pt-3"
+                      {...field}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

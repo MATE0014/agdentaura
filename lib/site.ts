@@ -1,27 +1,32 @@
 import {
   faAward,
   faBolt,
+  faBroom,
   faChild,
   faClock,
   faCircleCheck,
-  
+  faCrown,
   faFaceSmile,
-  
   faHouseMedical,
   faEnvelope,
   faLocationDot,
   faMagnifyingGlass,
   faMicroscope,
+  faPaintbrush,
   faPhone,
+  faScrewdriver,
   faShieldHeart,
+  faStethoscope,
   faSyringe,
   faTeeth,
+  faTeethOpen,
   faTooth,
   faUserDoctor,
   faStar,
   faKitMedical,
   faHandshake,
   faWandSparkles,
+  faXRay,
 } from "@fortawesome/free-solid-svg-icons"
 import { faFacebook, faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons"
 import type {
@@ -272,17 +277,17 @@ export const contactDetails: ContactDetail[] = [
 
 export const serviceCards: ServiceCard[] = [
   {
-    icon: faTooth,
+    icon: faStethoscope,
     title: "Dental Check-ups & Consultation",
     description: "Comprehensive examinations and personalized consultations to assess oral health and plan care.",
   },
   {
-    icon: faTeeth,
+    icon: faBroom,
     title: "Teeth Cleaning & Gum Care",
     description: "Professional scaling, polishing, and periodontal maintenance to support healthy gums and enamel.",
   },
   {
-    icon: faCircleCheck,
+    icon: faPaintbrush,
     title: "Tooth-Colored Fillings",
     description: "Aesthetic composite restorations that match natural tooth color while restoring function.",
   },
@@ -292,7 +297,7 @@ export const serviceCards: ServiceCard[] = [
     description: "Endodontic care to relieve pain, remove infection, and preserve the natural tooth structure.",
   },
   {
-    icon: faAward,
+    icon: faCrown,
     title: "Crowns & Bridges",
     description: "Durable ceramic and porcelain restorations to protect damaged teeth and replace missing ones.",
   },
@@ -302,17 +307,17 @@ export const serviceCards: ServiceCard[] = [
     description: "Cosmetic treatments and tailored smile plans to enhance whiteness, shape, and overall aesthetics.",
   },
   {
-    icon: faFaceSmile,
+    icon: faTeeth,
     title: "Braces & Clear Aligners",
     description: "Orthodontic options including fixed braces and discreet clear aligners for alignment and bite correction.",
   },
   {
-    icon: faSyringe,
+    icon: faScrewdriver,
     title: "Dental Implants",
     description: "Precision-planned implants to replace missing teeth with natural-looking, long-lasting results.",
   },
   {
-    icon: faBolt,
+    icon: faTeethOpen,
     title: "Tooth Extraction & Wisdom Tooth Removal",
     description: "Safe extractions performed with attention to comfort, healing, and post-op guidance.",
   },
@@ -322,7 +327,7 @@ export const serviceCards: ServiceCard[] = [
     description: "Child-focused preventive and restorative care that builds healthy habits and positive experiences.",
   },
   {
-    icon: faMicroscope,
+    icon: faXRay,
     title: "Digital X-rays & Oral Scanning",
     description: "Modern imaging and intraoral scanning for precise diagnosis and improved treatment planning.",
   },
