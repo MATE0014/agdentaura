@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.routers.appointments import router as appointments_router
-from backend.routers.contact import router as contact_router
+from routers.appointments import router as appointments_router
+from routers.contact import router as contact_router
 
 app = FastAPI(title="AG Dentaura API", version="1.0.0")
 

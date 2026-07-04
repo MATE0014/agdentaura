@@ -2,8 +2,8 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, status
 
-from backend.db.mongo import get_contact_collection
-from backend.models.contact import ContactCreate, ContactResponse
+from db.mongo import get_contact_collection
+from models.contact import ContactCreate, ContactResponse
 
 router = APIRouter(prefix="/contact", tags=["contact"])
 

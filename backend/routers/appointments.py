@@ -2,8 +2,8 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, status
 
-from backend.db.mongo import get_appointments_collection
-from backend.models.appointment import AppointmentCreate, AppointmentResponse
+from db.mongo import get_appointments_collection
+from models.appointment import AppointmentCreate, AppointmentResponse
 
 router = APIRouter(prefix="/appointments", tags=["appointments"])
 
